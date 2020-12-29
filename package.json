@@ -10,6 +10,7 @@
     "dependencies": {
         "@apollo/client": "^3.3.6",
         "@expo/vector-icons": "^12.0.2",
+        "@react-native-async-storage/async-storage": "^1.13.2",
         "@react-native-community/masked-view": "0.1.10",
         "@react-navigation/bottom-tabs": "^5.11.2",
         "@react-navigation/drawer": "^5.11.4",
@@ -36,9 +37,9 @@
         "@babel/core": "~7.9.0",
         "@types/react": "~16.9.35",
         "@types/react-dom": "~16.9.8",
-        "@types/react-native": "~0.63.2",
+        "@types/react-native": "^0.62.3",
         "react-native-debugger": "^1.1.0",
-        "typescript": "~4.0.0"
+        "typescript": "^4.0.5"
     },
     "private": true
 }
