@@ -8,6 +8,10 @@ import {
     DefaultTheme as PaperDefaultTheme,
 } from 'react-native-paper';
 
+const BaseTheme = {
+    roundness: 5,
+};
+
 export const DefaultTheme = {
     ...NavDefaultTheme,
     ...PaperDefaultTheme,
@@ -15,6 +19,7 @@ export const DefaultTheme = {
         ...PaperDefaultTheme.colors,
         ...NavDefaultTheme.colors,
     },
+    ...BaseTheme,
 };
 
 export const DarkTheme = {
@@ -24,4 +29,5 @@ export const DarkTheme = {
         ...NavDarkTheme.colors,
         ...PaperDarkTheme.colors,
     },
+    ...BaseTheme
 };
