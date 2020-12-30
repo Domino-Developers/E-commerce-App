@@ -1,1 +1,3 @@
-export const GRAPHQL_API = 'http://localhost:8000/graphql';
+import { GRAPHQL_API } from './env';
+
+export { GRAPHQL_API };
