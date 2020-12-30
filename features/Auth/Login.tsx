@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import { useMutation } from '@apollo/client';
+
+import * as api from './api';
 import Header from '../../components/Header';
 import TextInput from '../../components/TextInput';
 import styles from './styles';
 import { emailValidator, passwordValidator } from '../../utils/validators';
+import { authClear, setToken } from './userSlice';
 
 interface LoginProps {}
 
@@ -19,8 +24,11 @@ const Login: React.FC<LoginProps> = ({}) => {
         value: '',
         error: '',
     });
+    const [loading, setLoading] = useState<boolean>(false);
+    const dispatch = useDispatch();
+    const [login] = useMutation(api.LOGIN);
 
-    const onLogin = () => {
+    const onLogin = async () => {
         const emailError = emailValidator(email.value);
         const passwordError = passwordValidator(password.value);
 
@@ -29,8 +37,22 @@ const Login: React.FC<LoginProps> = ({}) => {
             setPassword({ ...password, error: passwordError });
             return;
         }
-        // TODO: Integrate login
-        console.log(email, password);
+
+        setLoading(true);
+        try {
+            const res = await login({
+                variables: { email: email.value, password: password.value },
+            });
+            const token = res.data.tokenAuth.token;
+            dispatch(setToken(token));
+        } catch (err) {
+            dispatch(authClear());
+            // TODO: Flash invalid credentials
+            console.error(err);
+        } finally {
+            setLoading(false);
+            // TODO: navigate to home screen
+        }
     };
 
     return (
@@ -66,6 +88,7 @@ const Login: React.FC<LoginProps> = ({}) => {
                 style={styles.btn}
                 focusable
                 onPress={onLogin}
+                loading={loading}
             >
                 Login
             </Button>

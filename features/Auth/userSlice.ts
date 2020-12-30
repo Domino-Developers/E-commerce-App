@@ -24,7 +24,7 @@ const userSlice = createSlice({
             state.token = action.payload;
             state.isLoggedIn = true;
         },
-        authClear: (state, _) => {
+        authClear: state => {
             state.isLoggedIn = false;
             state.token = '';
             state.name = '';
