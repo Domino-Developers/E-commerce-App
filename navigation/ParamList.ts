@@ -16,13 +16,16 @@ export type ProductsOverviewParamList = {
 export type ProductsOverviewNavProps<
     T extends keyof ProductsOverviewParamList
 > = {
-    navigation: BottomTabNavigationProp<ProductsOverviewParamList, T>;
+    navigation: CompositeNavigationProp<
+        BottomTabNavigationProp<ProductsOverviewParamList, T>,
+        StackNavigationProp<ProductsParamList>
+    >;
     route: RouteProp<ProductsOverviewParamList, T>;
 };
 
 export type ProductsParamList = {
     ProductsOverview: NavigatorScreenParams<ProductsOverviewParamList>;
-    ProductDetail: undefined;
+    ProductDetail: { id: string };
     Cart: undefined;
 };
 
