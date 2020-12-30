@@ -8,26 +8,30 @@ import {
     DefaultTheme as PaperDefaultTheme,
 } from 'react-native-paper';
 
-const BaseTheme = {
-    roundness: 5,
-};
+declare global {
+    namespace ReactNativePaper {
+        interface ThemeColors {
+            success: string;
+        }
+    }
+}
 
-export const DefaultTheme = {
+export const DefaultTheme: ReactNativePaper.Theme = {
     ...NavDefaultTheme,
     ...PaperDefaultTheme,
     colors: {
         ...PaperDefaultTheme.colors,
         ...NavDefaultTheme.colors,
+        success: '#28a745',
     },
-    ...BaseTheme,
 };
 
-export const DarkTheme = {
+export const DarkTheme: ReactNativePaper.Theme = {
     ...NavDarkTheme,
     ...PaperDarkTheme,
     colors: {
         ...NavDarkTheme.colors,
         ...PaperDarkTheme.colors,
+        success: '#28a745',
     },
-    ...BaseTheme
 };
