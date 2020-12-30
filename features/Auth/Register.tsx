@@ -1,6 +1,9 @@
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+
 import Header from '../../components/Header';
 import TextInput from '../../components/TextInput';
 import {
@@ -10,6 +13,8 @@ import {
     phoneValidator,
 } from '../../utils/validators';
 import styles from './styles';
+import * as api from './api';
+import { authClear, setToken } from './userSlice';
 
 interface RegisterProps {}
 
@@ -19,6 +24,8 @@ const Register: React.FC<RegisterProps> = ({}) => {
         error: string;
     }
 
+    // states
+    const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<inputObj>({ value: '', error: '' });
     const [name, setName] = useState<inputObj>({ value: '', error: '' });
     const [phn, setPhn] = useState<inputObj>({ value: '', error: '' });
@@ -31,7 +38,11 @@ const Register: React.FC<RegisterProps> = ({}) => {
         error: '',
     });
 
-    const onRegisterPressed = () => {
+    const dispatch = useDispatch();
+    const [register] = useMutation(api.REGISTER);
+    const [login] = useMutation(api.LOGIN);
+
+    const onRegisterPressed = async () => {
         const emailError = emailValidator(email.value);
         const passwordError = passwordValidator(password.value);
         const nameError = nameValidator(name.value);
@@ -57,8 +68,30 @@ const Register: React.FC<RegisterProps> = ({}) => {
             return;
         }
 
-        // TODO: Register integration
-        console.log(email, password, name, phn);
+        // First add the user and then login
+        try {
+            setLoading(true);
+            await register({
+                variables: {
+                    email: email.value,
+                    password: password.value,
+                    phone: phn.value,
+                    name: name.value,
+                },
+            });
+
+            const res = await login({
+                variables: { email: email.value, password: password.value },
+            });
+            dispatch(setToken(res.data.tokenAuth.token));
+        } catch (err) {
+            // TODO: Flash error
+            console.error(err);
+            dispatch(authClear());
+        } finally {
+            setLoading(false);
+            // TODO: navigate to home screen
+        }
     };
 
     return (
@@ -111,9 +144,9 @@ const Register: React.FC<RegisterProps> = ({}) => {
             <TextInput
                 label="Confirm Password"
                 returnKeyType="done"
-                value={password.value}
-                onChangeText={text => setPassword({ value: text, error: '' })}
-                error={!!password.error}
+                value={password2.value}
+                onChangeText={text => setPassword2({ value: text, error: '' })}
+                error={!!password2.error}
                 secureTextEntry
                 dense
                 focusable
@@ -124,6 +157,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
                 style={styles.btn}
                 focusable
                 onPress={onRegisterPressed}
+                loading={loading}
             >
                 Register
             </Button>

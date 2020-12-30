@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { View, KeyboardAvoidingView } from 'react-native';
-import { Text } from 'react-native-paper';
+import {
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+} from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 
 import Login from '../features/Auth/Login';
 import Register from '../features/Auth/Register';
 import { AccountNavProps } from '../navigation/ParamList';
-
-import { StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
 
 const AuthScreen: React.FC<AccountNavProps<'Auth'>> = ({ navigation }) => {
     const [loginView, setLoginView] = useState<boolean>(true);

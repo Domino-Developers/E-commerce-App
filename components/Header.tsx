@@ -1,15 +1,11 @@
-import { useTheme } from 'react-native-paper';
+import { useTheme, Text } from 'react-native-paper';
 import React, { memo } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { color } from 'react-native-reanimated';
+import { StyleSheet } from 'react-native';
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
-    const { colors } = useTheme();
-    return (
-        <Text style={[styles.header, { color: colors.text }]}>{children}</Text>
-    );
+    return <Text style={styles.header}>{children}</Text>;
 };
 
 const styles = StyleSheet.create({

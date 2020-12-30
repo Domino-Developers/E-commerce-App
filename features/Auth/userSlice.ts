@@ -23,6 +23,9 @@ const userSlice = createSlice({
         setToken: (state, action: PayloadAction<string>) => {
             state.token = action.payload;
             state.isLoggedIn = true;
+            state.name = '';
+            state.phone = '';
+            state.email = '';
         },
         authClear: state => {
             state.isLoggedIn = false;
