@@ -2,9 +2,15 @@ import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput as Input, useTheme, Text } from 'react-native-paper';
 
-type Props = React.ComponentProps<typeof Input> & { errorText?: string };
+type Props = React.ComponentProps<typeof Input> & {
+    errorText?: string;
+    leftIcon?: {
+        name: string;
+        color?: string;
+    };
+};
 
-const TextInput = ({ errorText, ...props }: Props) => {
+const TextInput = function ({ errorText, leftIcon, ...props }: Props) {
     const theme = useTheme();
     return (
         <View style={styles.container}>
@@ -12,6 +18,18 @@ const TextInput = ({ errorText, ...props }: Props) => {
                 selectionColor={theme.colors.primary}
                 underlineColor="transparent"
                 mode="outlined"
+                left={
+                    leftIcon && (
+                        <Input.Icon
+                            name={leftIcon.name}
+                            color={
+                                leftIcon.color
+                                    ? leftIcon.color
+                                    : theme.colors.primary
+                            }
+                        />
+                    )
+                }
                 {...props}
             />
             {errorText ? (
@@ -35,4 +53,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default memo(TextInput);
+export default TextInput;

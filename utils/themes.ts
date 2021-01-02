@@ -24,6 +24,7 @@ export const DefaultTheme: ReactNativePaper.Theme = {
         ...NavDefaultTheme.colors,
         success: '#28a745',
     },
+    roundness: 10,
 };
 
 export const DarkTheme: ReactNativePaper.Theme = {
@@ -34,4 +35,5 @@ export const DarkTheme: ReactNativePaper.Theme = {
         ...PaperDarkTheme.colors,
         success: '#28a745',
     },
+    roundness: 10,
 };

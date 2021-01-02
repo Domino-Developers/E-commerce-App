@@ -2,10 +2,14 @@ import { useTheme, Text } from 'react-native-paper';
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 
-interface HeaderProps {}
+type HeaderProps = React.ComponentProps<typeof Text>;
 
-const Header: React.FC<HeaderProps> = ({ children }) => {
-    return <Text style={styles.header}>{children}</Text>;
+const Header: React.FC<HeaderProps> = ({ style, children, ...props }) => {
+    return (
+        <Text style={[styles.header, style]} {...props}>
+            {children}
+        </Text>
+    );
 };
 
 const styles = StyleSheet.create({
