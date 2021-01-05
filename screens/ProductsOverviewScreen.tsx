@@ -98,7 +98,10 @@ const ProductsOverviewScreen: React.FC<
     );
 
     const rowRenderer = (_: any, data: { type: string; item: Product }) => (
-        <ProductCard product={data.item} navigation={navigation} />
+        <ProductCard
+            product={data.item}
+            view={id => navigation.navigate('ProductDetail', { id })}
+        />
     );
 
     if (!dataProvider.getSize()) return null;
