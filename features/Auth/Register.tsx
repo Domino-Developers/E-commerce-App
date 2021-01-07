@@ -103,6 +103,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
                 onChangeText={text => setName({ value: text, error: '' })}
                 value={name.value}
                 error={!!name.error}
+                errorText={name.error}
                 focusable
                 dense
             />

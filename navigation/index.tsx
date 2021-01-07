@@ -28,6 +28,7 @@ import {
     MainParamList,
     AccountNavProps,
 } from './ParamList';
+import { useTypedSelector } from '../utils/hooks';
 
 const getMenuIcon = (
     navigation:
@@ -120,7 +121,7 @@ const OrderNavigation: React.FC = () => (
 
 const AccountNavigator = createStackNavigator<AccountParamList>();
 const AccountNavigation: React.FC = () => {
-    const isLoggedIn = false;
+    const isLoggedIn = useTypedSelector(state => state.user.isLoggedIn);
 
     if (!isLoggedIn)
         return (
