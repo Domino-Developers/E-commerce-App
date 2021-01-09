@@ -12,10 +12,6 @@ import {
 } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
 
-import {
-    ProductsNavProps,
-    ProductsOverviewNavProps,
-} from '../../navigation/ParamList';
 import Rating from '../Rating';
 import styles from './styles';
 
@@ -31,7 +27,8 @@ interface Props {
     };
     view: (productId: string) => void;
     quantity?: number;
-    setQuantity?: (productId: string, qty: number) => void;
+    setQuantity?: (id: string, productId: string, qty: number) => void;
+    id?: string;
 }
 
 const ProductCard: React.FC<Props> = ({
@@ -39,6 +36,7 @@ const ProductCard: React.FC<Props> = ({
     view,
     quantity,
     setQuantity,
+    id,
 }) => {
     const newPrice = Math.ceil(
         product.price - (product.discount * product.price) / 100
@@ -52,16 +50,13 @@ const ProductCard: React.FC<Props> = ({
 
     const { colors } = useTheme();
 
-    const [qty, setQty] = useState(quantity || 0);
-
-    const inCart = quantity && setQuantity;
+    const inCart = !isNaN(quantity as number) && setQuantity;
 
     const changeQty = (change: number) => {
-        setQuantity?.(product.id, qty + change);
-        setQty(qty + change);
+        setQuantity?.(id as string, product.id, (quantity as number) + change);
     };
 
-    if (inCart && !qty) return null;
+    if (inCart && !quantity) return null;
 
     return (
         <TouchableRipple style={styles.card} onPress={() => view(product.id)}>
@@ -111,14 +106,14 @@ const ProductCard: React.FC<Props> = ({
                             <Text
                                 style={{
                                     color:
-                                        (product.stock || 0) >= qty
+                                        (product.stock || 0) >= (quantity || 0)
                                             ? colors.success
                                             : colors.error,
                                 }}
                             >
                                 {!product.stock
                                     ? 'Out of stock'
-                                    : product.stock >= qty
+                                    : product.stock >= (quantity || 0)
                                     ? 'In stock'
                                     : `Only ${product.stock} in stock`}
                             </Text>
@@ -135,7 +130,7 @@ const ProductCard: React.FC<Props> = ({
                             ]}
                             onPress={() => changeQty(-1)}
                         />
-                        <Text style={styles.quantity}>{qty}</Text>
+                        <Text style={styles.quantity}>{quantity}</Text>
                         <IconButton
                             icon={() => <Entypo name="plus" size={20} />}
                             style={[
