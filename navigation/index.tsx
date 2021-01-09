@@ -115,6 +115,7 @@ const OrderNavigation: React.FC = () => (
         <OrderNavigator.Screen
             name="OrderDetail"
             component={OrderDetailScreen}
+            options={{ title: 'Order Details' }}
         />
     </OrderNavigator.Navigator>
 );

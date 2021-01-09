@@ -1,7 +1,13 @@
 import { useQuery, useMutation } from '@apollo/client';
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList } from 'react-native';
-import { Text, ActivityIndicator } from 'react-native-paper';
+import {
+    Text,
+    ActivityIndicator,
+    Button,
+    Portal,
+    Dialog,
+} from 'react-native-paper';
 
 import ProductCard from '../../components/ProductCard';
 import { ProductsNavProps } from '../../navigation/ParamList';
@@ -17,6 +23,7 @@ interface Product {
 }
 
 interface CartObj {
+    id: string;
     product: Product;
     qty: number;
 }
@@ -30,11 +37,27 @@ interface CartData {
 const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
     const { data } = useQuery<CartData>(api.GET_CART);
     const [setQty] = useMutation(api.SET_QUANTITY);
+    const [order] = useMutation(api.ORDER);
     const cart = data?.me.cart;
+    const [dialog, setDialog] = useState(false);
+    const [orderLoading, setOrderLoading] = useState(false);
 
-    const setQuantity = async (productId: string, qty: number) => {
+    const setQuantity = async (id: string, productId: string, qty: number) => {
         try {
-            await setQty({ variables: { productId, qty } });
+            await setQty({
+                variables: { productId, qty },
+                optimisticResponse: {
+                    __typename: 'Mutation',
+                    setCart: {
+                        __typename: 'SetCart',
+                        cart: {
+                            id,
+                            __typename: 'CartType',
+                            qty,
+                        },
+                    },
+                },
+            });
         } catch (err) {
             console.error(err);
         }
@@ -42,6 +65,7 @@ const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
 
     const renderItem = ({ item }: { item: CartObj }) => (
         <ProductCard
+            id={item.id}
             product={item.product}
             view={id => navigation.navigate('ProductDetail', { id })}
             quantity={item.qty}
@@ -53,15 +77,70 @@ const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
 
     if (!cart.length)
         return (
-            <Text>Nothing here. Start by adding a product to your cart.</Text>
+            <Text style={{ margin: 20 }}>
+                Nothing here. Start by adding a product to your cart.
+            </Text>
         );
 
+    const startOrder = async () => {
+        setOrderLoading(true);
+        let res;
+
+        try {
+            const lessStock = cart.findIndex(c => c.qty > c.product.stock);
+
+            if (lessStock === -1) {
+                res = await order({ variables: { addressId: '1' } });
+                console.log(res);
+            } else {
+                setDialog(true);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+
+        setOrderLoading(false);
+
+        if (res)
+            navigation.navigate('Orders', {
+                screen: 'OrderDetail',
+                params: { id: res.data.orderCart.order.id },
+            });
+    };
+
     return (
-        <FlatList
-            data={cart}
-            renderItem={renderItem}
-            keyExtractor={item => item.product.id}
-        />
+        <>
+            <Portal>
+                <Dialog visible={dialog} onDismiss={() => setDialog(false)}>
+                    <Dialog.Title>Not in Stock</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>
+                            Some items in your cart are not in stock. Please
+                            change the quantity and try again.
+                        </Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button focusable onPress={() => setDialog(false)}>
+                            Ok
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+            <FlatList
+                data={cart}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
+            <Button
+                focusable
+                mode="contained"
+                onPress={startOrder}
+                loading={orderLoading}
+                disabled={orderLoading}
+            >
+                Order
+            </Button>
+        </>
     );
 };
 
