@@ -37,6 +37,12 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
             setPhone({ value: data.me.phone, error: '' });
             setName({ value: data.me.name, error: '' });
         }
+        if (error) {
+            setAlert({
+                text: 'Some error occured! Please try again',
+                type: 'danger',
+            });
+        }
     }, [data, fetchLoading, error]);
 
     if (fetchLoading || updateLoading) {
@@ -54,10 +60,7 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
     }
 
     if (error) {
-        setAlert({
-            text: 'Some error occured! Please try again',
-            type: 'danger',
-        });
+        console.log(error);
         return <Text>Sorry some error occured!!</Text>;
     }
 

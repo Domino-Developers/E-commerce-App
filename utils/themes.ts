@@ -23,6 +23,7 @@ export const DefaultTheme: ReactNativePaper.Theme = {
         ...PaperDefaultTheme.colors,
         ...NavDefaultTheme.colors,
         success: '#28a745',
+        background: '#fff',
     },
     roundness: 10,
 };
