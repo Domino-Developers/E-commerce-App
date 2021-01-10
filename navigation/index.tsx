@@ -1,13 +1,32 @@
 import React from 'react';
+import { useQuery } from '@apollo/client';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+    createDrawerNavigator,
+    DrawerContentScrollView,
+    DrawerItemList,
+    DrawerContentComponentProps,
+    DrawerItem,
+} from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
     Ionicons,
     FontAwesome5,
     MaterialCommunityIcons,
 } from '@expo/vector-icons';
+import { View } from 'react-native';
+import {
+    Title,
+    TouchableRipple,
+    useTheme,
+    Switch,
+    Text,
+} from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 
+import styles from './styles';
+import * as api from './api';
+import { changeTheme } from '../store/generalSlice';
 import AuthScreen from '../screens/AuthScreen';
 import AccountScreen from '../screens/AccountScreen';
 import AppointmentScreen from '../screens/AppointmentScreen';
@@ -150,11 +169,64 @@ const AccountNavigation: React.FC = () => {
     );
 };
 
+const CustomDrawer = (props: DrawerContentComponentProps) => {
+    interface UserData {
+        me: {
+            name: string;
+        };
+    }
+
+    const { data, loading } = useQuery<UserData>(api.GET_USERDATA);
+    const name = data?.me.name;
+
+    const { colors } = useTheme();
+    const darkTheme = useTypedSelector(state => state.general.darkTheme);
+    const dispatch = useDispatch();
+
+    return (
+        <DrawerContentScrollView {...props}>
+            <TouchableRipple
+                onPress={() => props.navigation.navigate('Account')}
+            >
+                <Title style={styles.drawerTitle}>
+                    Hello{loading ? '' : name ? `, ${name}` : '. Sign In'}
+                </Title>
+            </TouchableRipple>
+            <DrawerItemList {...props} inactiveTintColor={colors.text} />
+            <DrawerItem
+                onPress={() => {}}
+                label={() => (
+                    <View style={styles.switchContainer}>
+                        <Text>Dark Theme</Text>
+                        <Switch
+                            focusable
+                            value={darkTheme}
+                            onValueChange={() =>
+                                dispatch(changeTheme(!darkTheme))
+                            }
+                        />
+                    </View>
+                )}
+            />
+        </DrawerContentScrollView>
+    );
+};
+
 const MainNavigator = createDrawerNavigator<MainParamList>();
 const MainNavigation: React.FC = () => (
-    <MainNavigator.Navigator>
-        <MainNavigator.Screen name="Products" component={ProductsNavigation} />
-        <MainNavigator.Screen name="Orders" component={OrderNavigation} />
+    <MainNavigator.Navigator
+        drawerContent={props => <CustomDrawer {...props} />}
+    >
+        <MainNavigator.Screen
+            name="Products"
+            component={ProductsNavigation}
+            options={{ title: 'Home' }}
+        />
+        <MainNavigator.Screen
+            name="Orders"
+            component={OrderNavigation}
+            options={{ title: 'Your Orders' }}
+        />
         <MainNavigator.Screen name="Account" component={AccountNavigation} />
     </MainNavigator.Navigator>
 );
