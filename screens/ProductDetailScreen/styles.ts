@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     cross: {
         textDecorationLine: 'line-through',
+        fontSize: 15,
     },
     priceArea: {
         padding: 10,
@@ -61,6 +62,38 @@ const styles = StyleSheet.create({
     },
     commentContainer: {
         marginVertical: 10,
+    },
+    img: {
+        width: '100%',
+        height: 250,
+        marginLeft: 10,
+        marginRight: 10,
+    },
+    newFeedbackContainer: {
+        marginTop: 15,
+    },
+    newRatingContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+    newReviewInput: {
+        marginBottom: 10,
+    },
+    btn: {
+        width: '45%',
+    },
+    price: {
+        fontWeight: 'bold',
+        fontSize: 30,
+    },
+    doubleButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        paddingTop: 10,
     },
 });
 export default styles;

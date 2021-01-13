@@ -6,6 +6,7 @@ import {
     Paragraph,
     Subheading,
     useTheme,
+    Text,
 } from 'react-native-paper';
 import FromNow from '../../components/FromNow/FromNow';
 import Rating from '../../components/Rating';
@@ -71,4 +72,16 @@ const Comment: React.FC<CommentProps> = ({ review }) => {
     );
 };
 
+interface NewCommentProps {}
+
+const NewComment: React.FC<NewCommentProps> = ({}) => {
+    return (
+        <View>
+            <Text>New Comment</Text>
+        </View>
+    );
+};
+
 export default Comment;
+
+export { NewComment };

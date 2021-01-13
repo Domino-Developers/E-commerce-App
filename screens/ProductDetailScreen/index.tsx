@@ -8,6 +8,9 @@ import {
     Title,
     Caption,
     useTheme,
+    Button,
+    Paragraph,
+    Headline,
 } from 'react-native-paper';
 
 import FullPageLoading from '../../components/FullPageLoading';
@@ -74,53 +77,43 @@ const ProductDetailScreen: React.FC<ProductsNavProps<'ProductDetail'>> = ({
                 <Text>Sorry no photos available</Text>
             )}
             <Divider focusable />
-            {/* <Surface
-                focusable
-                style={[
-                    {
-                        backgroundColor: colors.surface,
-                    },
-                    styles.descriptionArea,
-                ]}
-            > */}
             <View style={styles.descriptionArea}>
-                <Text>{product.description}</Text>
+                <Header>About</Header>
+                <Paragraph>{product.description}</Paragraph>
             </View>
-            {/* </Surface> */}
             <Divider focusable />
             <View style={styles.priceArea}>
-                <Text>
-                    <Title>₹ {newPrice}</Title>
-                    {'   '}
+                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                    <Text style={styles.price}>₹ {newPrice} </Text>
                     {product.discount > 0 && (
                         <Caption style={styles.cross}>
                             ₹ {product.price}
                         </Caption>
                     )}
-                </Text>
-                <FullButton
-                    focusable
-                    color={colors.accent}
-                    onPress={() => {
-                        // buy
-                        console.log('Buy', product.id);
-                    }}
-                >
-                    Buy Now
-                </FullButton>
-                <FullButton
-                    focusable
-                    onPress={() => {
-                        // add to card
-                        console.log('Add to Card', product.id);
-                    }}
-                >
-                    Add to Cart
-                </FullButton>
-                {/* <Text>{JSON.stringify(product)}</Text> */}
+                </View>
+
+                <View style={styles.doubleButtonContainer}>
+                    <Button
+                        style={styles.btn}
+                        focusable
+                        mode="contained"
+                        onPress={() => console.log('hi')}
+                    >
+                        Add to Cart
+                    </Button>
+                    <Button
+                        style={styles.btn}
+                        focusable
+                        mode="contained"
+                        onPress={() => console.log('hi')}
+                        color={colors.accent}
+                    >
+                        Buy Now
+                    </Button>
+                </View>
             </View>
             <Divider focusable></Divider>
-            <Feedback reviews={product.reviews} />
+            <Feedback reviews={product.reviews} productId={product.id} />
         </ScrollView>
     );
 };

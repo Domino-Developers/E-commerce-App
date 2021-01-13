@@ -16,7 +16,7 @@ export const GET_PRODUCT = gql`
             reviews {
                 id
                 user {
-                    id
+                    email
                     name
                 }
                 createdOn
@@ -25,6 +25,16 @@ export const GET_PRODUCT = gql`
                 likesCount
                 isLiked @include(if: $loggedIn)
             }
+        }
+    }
+`;
+
+export const ADD_REVIEW = gql`
+    mutation($productId: String!, $rating: Int!, $text: String!) {
+        addReview(productId: $productId, rating: $rating, text: $text) {
+            id
+            rating
+            text
         }
     }
 `;
