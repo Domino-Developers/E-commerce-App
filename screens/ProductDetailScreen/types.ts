@@ -11,6 +11,10 @@ export interface Review {
     createdOn: string;
 }
 
+export interface Photo {
+    url: string;
+}
+
 export interface Product {
     id: string;
     name: string;
@@ -18,7 +22,7 @@ export interface Product {
     discount: number;
     stock: number;
     description: string;
-    photos: { url: string }[];
+    photos: Photo[];
     reviews: Review[];
 }
 

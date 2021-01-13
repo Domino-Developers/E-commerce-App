@@ -20,6 +20,7 @@ import styles from './styles';
 import Feedback from './Feedback';
 // import Reviews from './Reviews';
 import { ProductData } from './types';
+import Carousel from './Carousel';
 
 const ProductDetailScreen: React.FC<ProductsNavProps<'ProductDetail'>> = ({
     route,
@@ -66,9 +67,14 @@ const ProductDetailScreen: React.FC<ProductsNavProps<'ProductDetail'>> = ({
                 <Header>{product.name}</Header>
             </View>
             <Divider focusable />
-            <Text>Carousel here</Text>
+            {/* <Text>{JSON.stringify(product)}</Text> */}
+            {product.photos.length > 0 ? (
+                <Carousel photos={product.photos} />
+            ) : (
+                <Text>Sorry no photos available</Text>
+            )}
             <Divider focusable />
-            <Surface
+            {/* <Surface
                 focusable
                 style={[
                     {
@@ -76,9 +82,11 @@ const ProductDetailScreen: React.FC<ProductsNavProps<'ProductDetail'>> = ({
                     },
                     styles.descriptionArea,
                 ]}
-            >
+            > */}
+            <View style={styles.descriptionArea}>
                 <Text>{product.description}</Text>
-            </Surface>
+            </View>
+            {/* </Surface> */}
             <Divider focusable />
             <View style={styles.priceArea}>
                 <Text>

@@ -9,9 +9,7 @@ const styles = StyleSheet.create({
     },
     descriptionArea: {
         padding: 10,
-        elevation: 4,
         margin: 10,
-        borderRadius: 10,
     },
     feedback: {
         flexDirection: 'row',
