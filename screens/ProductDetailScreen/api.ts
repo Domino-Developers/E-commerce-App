@@ -30,11 +30,27 @@ export const GET_PRODUCT = gql`
 `;
 
 export const ADD_REVIEW = gql`
-    mutation($productId: String!, $rating: Int!, $text: String!) {
+    mutation AddReview($productId: String!, $rating: Int!, $text: String!) {
         addReview(productId: $productId, rating: $rating, text: $text) {
             id
             rating
             text
+        }
+    }
+`;
+
+export const LIKE_REVIEW = gql`
+    mutation LikeReview($reviewId: String!) {
+        likeReview(reviewId: $reviewId) {
+            id
+        }
+    }
+`;
+
+export const UNLIKE_REVIEW = gql`
+    mutation UnlikeReview($reviewId: String!) {
+        unlikeReview(reviewId: $reviewId) {
+            id
         }
     }
 `;
