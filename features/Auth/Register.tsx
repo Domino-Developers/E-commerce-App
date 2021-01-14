@@ -79,11 +79,14 @@ const Register: React.FC<RegisterProps> = ({}) => {
                     name: name.value,
                 },
             });
-
             const res = await login({
                 variables: { email: email.value, password: password.value },
             });
-            dispatch(setToken(res.data.tokenAuth.token));
+            const {
+                token,
+                payload: { email: _email },
+            } = res.data.tokenAuth;
+            dispatch(setToken({ token, email: _email }));
         } catch (err) {
             // TODO: Flash error
             console.error(err);

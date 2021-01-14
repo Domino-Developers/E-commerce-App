@@ -3,24 +3,31 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface userState {
     token: string;
     isLoggedIn: boolean;
+    email: string;
 }
 
 const initialState: userState = {
     token: '',
     isLoggedIn: false,
+    email: '',
 };
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setToken: (state, action: PayloadAction<string>) => {
-            state.token = action.payload;
+        setToken: (
+            state,
+            action: PayloadAction<{ token: string; email: string }>
+        ) => {
+            state.token = action.payload.token;
+            state.email = action.payload.email;
             state.isLoggedIn = true;
         },
         authClear: state => {
             state.isLoggedIn = false;
             state.token = '';
+            state.email = '';
         },
     },
 });

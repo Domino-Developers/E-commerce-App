@@ -60,7 +60,7 @@ const ProductCard: React.FC<Props> = ({
 
     return (
         <TouchableRipple style={styles.card} onPress={() => view(product.id)}>
-            <Surface focusable>
+            <Surface focusable style={{ elevation: 4, borderRadius: 10 }}>
                 <Badge
                     style={styles.badge}
                     size={40}

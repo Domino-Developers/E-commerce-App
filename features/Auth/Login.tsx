@@ -44,7 +44,8 @@ const Login: React.FC<LoginProps> = ({}) => {
                 variables: { email: email.value, password: password.value },
             });
             const token = res.data.tokenAuth.token;
-            dispatch(setToken(token));
+            const _email = res.data.tokenAuth.payload.email;
+            dispatch(setToken({ token, email: _email }));
         } catch (err) {
             dispatch(authClear());
             // TODO: Flash invalid credentials

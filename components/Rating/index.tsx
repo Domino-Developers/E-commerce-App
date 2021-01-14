@@ -26,4 +26,8 @@ const Rating: React.FC<Props> = ({ rating, total, size }) => (
     </View>
 );
 
+interface NewRatingProps {
+    onRatingChange: (rating: number) => void;
+}
+
 export default Rating;
