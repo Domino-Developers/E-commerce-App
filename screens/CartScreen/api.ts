@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_CART = gql`
     query {
         me {
+            id
             cart {
                 id
                 product {
@@ -40,4 +41,4 @@ export const ORDER = gql`
             }
         }
     }
-`
+`;

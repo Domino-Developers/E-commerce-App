@@ -54,3 +54,27 @@ export const UNLIKE_REVIEW = gql`
         }
     }
 `;
+
+export const ADD_TO_CART = gql`
+    mutation AddToCart($productId: String!) {
+        setCart(cartObj: { productId: $productId, qty: 1 }, add: true) {
+            cart {
+                id
+                qty
+            }
+        }
+    }
+`;
+
+export const ORDER_PRODUCT = gql`
+    mutation OrderProduct($productId: String!, $addressId: String!) {
+        orderProduct(
+            productObj: { productId: $productId, qty: 1 }
+            addressId: $addressId
+        ) {
+            order {
+                id
+            }
+        }
+    }
+`;

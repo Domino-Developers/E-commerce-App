@@ -7,10 +7,13 @@ import {
     Button,
     Portal,
     Dialog,
+    useTheme,
 } from 'react-native-paper';
+import OrderConfirmPopup from '../../components/OrderConfirmPopUp/OrderConfirmPopup';
 
 import ProductCard from '../../components/ProductCard';
 import { ProductsNavProps } from '../../navigation/ParamList';
+import { useAlert } from '../../utils/hooks';
 import * as api from './api';
 
 interface Product {
@@ -36,10 +39,13 @@ interface CartData {
 
 const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
     const { data } = useQuery<CartData>(api.GET_CART);
+    const { colors } = useTheme();
     const [setQty] = useMutation(api.SET_QUANTITY);
     const [order] = useMutation(api.ORDER);
+    const setAlert = useAlert();
     const cart = data?.me.cart;
     const [dialog, setDialog] = useState(false);
+    const [orderConfirmDialog, setOrderConfirm] = useState(false);
     const [orderLoading, setOrderLoading] = useState(false);
 
     const setQuantity = async (id: string, productId: string, qty: number) => {
@@ -101,11 +107,13 @@ const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
 
         setOrderLoading(false);
 
-        if (res)
+        if (res) {
+            setAlert({ text: 'Ordered Successfull!!', type: 'success' });
             navigation.navigate('Orders', {
                 screen: 'OrderDetail',
                 params: { id: res.data.orderCart.order.id },
             });
+        }
     };
 
     return (
@@ -126,6 +134,11 @@ const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
+            <OrderConfirmPopup
+                visible={orderConfirmDialog}
+                setVisible={setOrderConfirm}
+                onOrder={startOrder}
+            />
             <FlatList
                 data={cart}
                 renderItem={renderItem}
@@ -134,7 +147,7 @@ const CartScreen: React.FC<ProductsNavProps<'Cart'>> = ({ navigation }) => {
             <Button
                 focusable
                 mode="contained"
-                onPress={startOrder}
+                onPress={() => setOrderConfirm(true)}
                 loading={orderLoading}
                 disabled={orderLoading}
             >
