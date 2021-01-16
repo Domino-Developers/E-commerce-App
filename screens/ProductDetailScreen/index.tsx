@@ -85,8 +85,8 @@ const ProductDetailScreen: React.FC<ProductsNavProps<'ProductDetail'>> = ({
             setAlert({ text: 'Ordered Successfully', type: 'success' });
 
             navigation.navigate('Orders', {
-                screen: 'OrderDetail',
-                params: { id: res.data.orderProduct.order.id },
+                screen: 'Orders',
+                params: { redirect: res.data.orderProduct.order.id },
             });
         } catch (err) {
             setOrderLoading(false);

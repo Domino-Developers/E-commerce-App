@@ -94,32 +94,38 @@ const ProductsOverviewNavigation: React.FC = () => (
 );
 
 const ProductsNavigator = createStackNavigator<ProductsParamList>();
-const ProductsNavigation: React.FC = () => (
-    <ProductsNavigator.Navigator>
-        <ProductsNavigator.Screen
-            name="ProductsOverview"
-            component={ProductsOverviewNavigation}
-            options={({
-                navigation,
-            }: ProductsNavProps<'ProductsOverview'>) => ({
-                title: 'All Products',
-                headerRight: () => (
-                    <Ionicons
-                        name="md-cart"
-                        size={23}
-                        onPress={() => navigation.navigate('Cart')}
-                    />
-                ),
-                headerLeft: () => getMenuIcon(navigation),
-            })}
-        />
-        <ProductsNavigator.Screen
-            name="ProductDetail"
-            component={ProductDetailScreen}
-        />
-        <ProductsNavigator.Screen name="Cart" component={CartScreen} />
-    </ProductsNavigator.Navigator>
-);
+const ProductsNavigation: React.FC = () => {
+    const isLoggedIn = useTypedSelector(state => state.user.isLoggedIn);
+
+    return (
+        <ProductsNavigator.Navigator>
+            <ProductsNavigator.Screen
+                name="ProductsOverview"
+                component={ProductsOverviewNavigation}
+                options={({
+                    navigation,
+                }: ProductsNavProps<'ProductsOverview'>) => ({
+                    title: 'All Products',
+                    headerRight: () =>
+                        isLoggedIn && (
+                            <Ionicons
+                                name="md-cart"
+                                size={23}
+                                onPress={() => navigation.navigate('Cart')}
+                                style={styles.cartIcon}
+                            />
+                        ),
+                    headerLeft: () => getMenuIcon(navigation),
+                })}
+            />
+            <ProductsNavigator.Screen
+                name="ProductDetail"
+                component={ProductDetailScreen}
+            />
+            <ProductsNavigator.Screen name="Cart" component={CartScreen} />
+        </ProductsNavigator.Navigator>
+    );
+};
 
 const OrderNavigator = createStackNavigator<OrderParamList>();
 const OrderNavigation: React.FC = () => (
@@ -213,22 +219,31 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
 };
 
 const MainNavigator = createDrawerNavigator<MainParamList>();
-const MainNavigation: React.FC = () => (
-    <MainNavigator.Navigator
-        drawerContent={props => <CustomDrawer {...props} />}
-    >
-        <MainNavigator.Screen
-            name="Products"
-            component={ProductsNavigation}
-            options={{ title: 'Home' }}
-        />
-        <MainNavigator.Screen
-            name="Orders"
-            component={OrderNavigation}
-            options={{ title: 'Your Orders' }}
-        />
-        <MainNavigator.Screen name="Account" component={AccountNavigation} />
-    </MainNavigator.Navigator>
-);
+const MainNavigation: React.FC = () => {
+    const isLoggedIn = useTypedSelector(state => state.user.isLoggedIn);
+
+    return (
+        <MainNavigator.Navigator
+            drawerContent={props => <CustomDrawer {...props} />}
+        >
+            <MainNavigator.Screen
+                name="Products"
+                component={ProductsNavigation}
+                options={{ title: 'Home' }}
+            />
+            {isLoggedIn && (
+                <MainNavigator.Screen
+                    name="Orders"
+                    component={OrderNavigation}
+                    options={{ title: 'Your Orders' }}
+                />
+            )}
+            <MainNavigator.Screen
+                name="Account"
+                component={AccountNavigation}
+            />
+        </MainNavigator.Navigator>
+    );
+};
 
 export default MainNavigation;
