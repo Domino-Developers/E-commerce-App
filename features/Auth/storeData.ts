@@ -8,4 +8,12 @@ const storeData = async (data: { email: string; token: string }) => {
     }
 };
 
+export const removeData = async () => {
+    try {
+        await AsyncStorage.removeItem('DD-E-commerce');
+    } catch (err) {
+        console.error();
+    }
+};
+
 export default storeData;

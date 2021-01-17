@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
@@ -48,6 +48,7 @@ import {
     AccountNavProps,
 } from './ParamList';
 import { useTypedSelector } from '../utils/hooks';
+import { authClear } from '../features/Auth/userSlice';
 
 const getMenuIcon = (
     navigation:
@@ -182,9 +183,12 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
         };
     }
 
-    const { data, loading } = useQuery<UserData>(api.GET_USERDATA);
+    const { data, loading, refetch } = useQuery<UserData>(api.GET_USERDATA);
+    const loggedIn = useTypedSelector(state => state.user.isLoggedIn);
     const name = data?.me.name;
-
+    useEffect(() => {
+        refetch();
+    }, [loggedIn]);
     const { colors } = useTheme();
     const darkTheme = useTypedSelector(state => state.general.darkTheme);
     const dispatch = useDispatch();
@@ -214,6 +218,14 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
                     </View>
                 )}
             />
+            {loggedIn && (
+                <DrawerItem
+                    onPress={() => {
+                        dispatch(authClear());
+                    }}
+                    label="Logout"
+                />
+            )}
         </DrawerContentScrollView>
     );
 };
