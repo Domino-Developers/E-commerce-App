@@ -10,7 +10,6 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
     const userState = store.getState().user;
-    console.log(userState);
     return {
         headers: {
             ...headers,
