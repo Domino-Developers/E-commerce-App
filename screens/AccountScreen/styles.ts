@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
         elevation: 4,
         marginHorizontal: 10,
         borderRadius: 10,
+        marginBottom: 20,
     },
     fab: {
         position: 'absolute',
@@ -18,7 +19,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     textInput: {
-        // padding: 3,
         margin: 10,
     },
     headerInput: {

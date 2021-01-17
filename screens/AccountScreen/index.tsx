@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useState, Fragment, useEffect } from 'react';
-import { View, StyleProp, TextStyle } from 'react-native';
+import { ScrollView } from 'react-native';
 import {
     Text,
     ActivityIndicator,
@@ -17,9 +17,9 @@ import Header from '../../components/Header';
 import styles from './styles';
 import * as api from './api';
 import { User } from '../../utils/types';
-import AddressContainer from '../../components/Address';
 import TextInput from '../../components/TextInput';
 import { nameValidator, phoneValidator } from '../../utils/validators';
+import AddressComponent from './AddressComponent';
 
 const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
     const { data, loading: fetchLoading, error } = useQuery(api.GET_USERDATA);
@@ -31,11 +31,40 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
     const [editing, setEditing] = useState(false);
     const [phone, setPhone] = useState({ value: '', error: '' });
     const [name, setName] = useState({ value: '', error: '' });
+    const [address, setAddress] = useState({
+        name: { value: '', error: '' },
+        phone: { value: '', error: '' },
+        address1: { value: '', error: '' },
+        address2: { value: '', error: '' },
+        pincode: { value: 0, error: '' },
+        city: { value: '', error: '' },
+        state: { value: '', error: '' },
+    });
 
     useEffect(() => {
         if (data && !fetchLoading && !error) {
             setPhone({ value: data.me.phone, error: '' });
             setName({ value: data.me.name, error: '' });
+            let myAddress = data.me.addressSet;
+
+            if (myAddress.length > 0) {
+                myAddress = myAddress[0];
+                console.log(myAddress);
+                const newState = { ...address };
+                [
+                    'name',
+                    'phone',
+                    'address1',
+                    'address2',
+                    'pincode',
+                    'city',
+                    'state',
+                ].forEach(
+                    k => (newState[k] = { value: myAddress[k], error: '' })
+                );
+
+                setAddress(newState);
+            }
         }
         if (error) {
             setAlert({
@@ -76,9 +105,17 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
             return;
         }
 
+        const formattedAddress = {};
+        for (const property in address)
+            formattedAddress[property] = address[property].value;
+
         try {
             await updateUserData({
-                variables: { name: name.value, phone: phone.value },
+                variables: {
+                    name: name.value,
+                    phone: phone.value,
+                    address: formattedAddress,
+                },
             });
             setEditing(false);
         } catch (err) {
@@ -91,7 +128,7 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
     };
 
     return (
-        <View style={styles.page}>
+        <ScrollView style={styles.page}>
             {editing ? (
                 <TextInput
                     style={styles.headerInput}
@@ -179,6 +216,11 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
                     </Fragment>
                 )}
             </Surface>
+            <AddressComponent
+                address={address}
+                setAddress={setAddress}
+                editing={editing}
+            />
             <FAB
                 style={styles.fab}
                 focusable
@@ -191,7 +233,7 @@ const AccountScreen: React.FC<AccountNavProps<'Account'>> = () => {
                     }
                 }}
             />
-        </View>
+        </ScrollView>
     );
 };
 
