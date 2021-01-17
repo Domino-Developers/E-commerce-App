@@ -17,6 +17,7 @@
         "@react-navigation/native": "^5.8.10",
         "@react-navigation/stack": "^5.12.8",
         "@reduxjs/toolkit": "^1.5.0",
+        "@types/react-native-calendars": "^1.505.0",
         "@types/react-native-snap-carousel": "^3.8.2",
         "@types/react-redux": "^7.1.14",
         "expo": "~40.0.0",
@@ -26,6 +27,7 @@
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+        "react-native-calendars": "^1.1129.0",
         "react-native-gesture-handler": "~1.8.0",
         "react-native-paper": "^4.5.0",
         "react-native-reanimated": "~1.13.0",
@@ -35,7 +37,8 @@
         "react-native-web": "~0.13.12",
         "react-redux": "^7.2.2",
         "recyclerlistview": "^3.0.0",
-        "redux": "^4.0.5"
+        "redux": "^4.0.5",
+        "@react-native-community/datetimepicker": "3.0.4"
     },
     "devDependencies": {
         "@babel/core": "~7.9.0",
