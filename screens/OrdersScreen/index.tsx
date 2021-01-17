@@ -97,7 +97,7 @@ const OrdersScreen: React.FC<OrderNavProps<'Orders'>> = ({
     const orders = data?.orders;
 
     useEffect(() => {
-        const redirect = route.params.redirect;
+        const redirect = route.params?.redirect;
         if (redirect) navigation.navigate('OrderDetail', { id: redirect });
 
         return navigation.addListener('focus', () => refetch());
