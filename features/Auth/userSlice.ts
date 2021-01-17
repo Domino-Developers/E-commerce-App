@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { removeData } from './storeData';
 export interface userState {
     token: string;
     isLoggedIn: boolean;
@@ -28,6 +29,7 @@ const userSlice = createSlice({
             state.isLoggedIn = false;
             state.token = '';
             state.email = '';
+            removeData();
         },
     },
 });
