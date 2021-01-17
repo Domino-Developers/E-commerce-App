@@ -9,6 +9,7 @@ export const GET_USERDATA = gql`
             phone
             addressSet {
                 name
+                phone
                 address1
                 address2
                 pincode
@@ -21,8 +22,12 @@ export const GET_USERDATA = gql`
 `;
 
 export const SET_USERDATA = gql`
-    mutation UpdateMe($name: String!, $phone: String!) {
-        updateMe(name: $name, phone: $phone) {
+    mutation UpdateMe(
+        $name: String!
+        $phone: String!
+        $address: AddressInputType!
+    ) {
+        updateMe(name: $name, phone: $phone, address: $address) {
             user {
                 id
                 name
