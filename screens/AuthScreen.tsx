@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -6,36 +6,14 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
 
 import Login from '../features/Auth/Login';
 import Register from '../features/Auth/Register';
 import { AccountNavProps } from '../navigation/ParamList';
-import { setToken } from '../features/Auth/userSlice';
 
 const AuthScreen: React.FC<AccountNavProps<'Auth'>> = ({ navigation }) => {
     const [loginView, setLoginView] = useState<boolean>(true);
     const theme = useTheme();
-    const dispatch = useDispatch();
-
-    const getData = async () => {
-        try {
-            const dataString = await AsyncStorage.getItem('DD-E-commerce');
-            console.log(dataString);
-            if (dataString) {
-                const data = JSON.parse(dataString);
-                dispatch(setToken(data));
-                navigation.navigate('Products');
-            }
-        } catch (err) {
-            console.error(err.message);
-        }
-    };
-
-    useEffect(() => {
-        getData();
-    });
 
     return (
         <KeyboardAvoidingView behavior="height" style={styles.container}>

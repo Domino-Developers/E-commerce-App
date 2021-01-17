@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
@@ -23,6 +23,7 @@ import {
     Text,
 } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import styles from './styles';
 import * as api from './api';
@@ -35,6 +36,7 @@ import OrdersScreen from '../screens/OrdersScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import ProductsOverviewScreen from '../screens/ProductsOverviewScreen';
+import { setToken } from '../features/Auth/userSlice';
 
 import {
     ProductsOverviewParamList,
@@ -221,6 +223,24 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
 const MainNavigator = createDrawerNavigator<MainParamList>();
 const MainNavigation: React.FC = () => {
     const isLoggedIn = useTypedSelector(state => state.user.isLoggedIn);
+    const dispatch = useDispatch();
+
+    const getData = async () => {
+        try {
+            const dataString = await AsyncStorage.getItem('DD-E-commerce');
+            console.log(dataString);
+            if (dataString) {
+                const data = JSON.parse(dataString);
+                dispatch(setToken(data));
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    });
 
     return (
         <MainNavigator.Navigator
