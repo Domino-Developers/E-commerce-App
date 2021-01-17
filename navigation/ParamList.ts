@@ -38,7 +38,7 @@ export type ProductsNavProps<T extends keyof ProductsParamList> = {
 };
 
 export type OrderParamList = {
-    Orders: undefined;
+    Orders: { redirect?: string };
     OrderDetail: { id: string };
 };
 

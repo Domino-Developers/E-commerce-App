@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { View, FlatList, Image } from 'react-native';
 import {
     ActivityIndicator,
@@ -38,19 +38,21 @@ interface ProductContainer {
     productObj: ProductObject;
     orderId: string;
     status: string;
-    navigation?: OrderNavProps<'Orders'>['navigation']
+    navigation?: OrderNavProps<'Orders'>['navigation'];
 }
 
 const Product: React.FC<ProductContainer> = ({
     productObj,
     status,
     orderId,
-    navigation
+    navigation,
 }) => {
     const { colors } = useTheme();
 
     return (
-        <TouchableRipple  onPress={() => navigation?.navigate('OrderDetail', {id: orderId})}>
+        <TouchableRipple
+            onPress={() => navigation?.navigate('OrderDetail', { id: orderId })}
+        >
             <Surface focusable style={styles.productContainer}>
                 <Badge
                     style={[
@@ -86,14 +88,26 @@ const Product: React.FC<ProductContainer> = ({
     );
 };
 
-const OrdersScreen: React.FC<OrderNavProps<'Orders'>> = ({navigation}) => {
+const OrdersScreen: React.FC<OrderNavProps<'Orders'>> = ({
+    navigation,
+    route,
+}) => {
     const { data, refetch } = useQuery<OrdersData>(api.GET_ORDERS);
 
     const orders = data?.orders;
 
     useEffect(() => {
-        return navigation.addListener('focus', () => refetch())
-    })
+        const redirect = route.params.redirect;
+        if (redirect) navigation.navigate('OrderDetail', { id: redirect });
+
+        return navigation.addListener('focus', () => refetch());
+    });
+
+    useEffect(() => {
+        return navigation.addListener('blur', () =>
+            navigation.setParams({ redirect: undefined })
+        );
+    });
 
     if (!orders) return <ActivityIndicator focusable />;
 

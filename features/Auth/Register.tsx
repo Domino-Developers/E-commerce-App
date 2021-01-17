@@ -15,10 +15,15 @@ import {
 import styles from './styles';
 import * as api from './api';
 import { authClear, setToken } from './userSlice';
+import { useAlert } from '../../utils/hooks';
+import { AccountNavProps } from '../../navigation/ParamList';
+import storeData from './storeData';
 
-interface RegisterProps {}
+interface RegisterProps {
+    navigation: AccountNavProps<'Auth'>['navigation'];
+}
 
-const Register: React.FC<RegisterProps> = ({}) => {
+const Register: React.FC<RegisterProps> = ({ navigation }) => {
     interface inputObj {
         value: string;
         error: string;
@@ -41,6 +46,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
     const dispatch = useDispatch();
     const [register] = useMutation(api.REGISTER);
     const [login] = useMutation(api.LOGIN);
+    const setAlert = useAlert();
 
     const onRegisterPressed = async () => {
         const emailError = emailValidator(email.value);
@@ -86,14 +92,14 @@ const Register: React.FC<RegisterProps> = ({}) => {
                 token,
                 payload: { email: _email },
             } = res.data.tokenAuth;
+            await storeData({ email: _email, token });
             dispatch(setToken({ token, email: _email }));
+            navigation.navigate('Products');
         } catch (err) {
-            // TODO: Flash error
-            console.error(err);
+            setAlert({ text: 'Invalid Email/Password', type: 'danger' });
             dispatch(authClear());
         } finally {
             setLoading(false);
-            // TODO: navigate to home screen
         }
     };
 

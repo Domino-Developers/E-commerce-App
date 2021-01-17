@@ -10,10 +10,15 @@ import TextInput from '../../components/TextInput';
 import styles from './styles';
 import { emailValidator, passwordValidator } from '../../utils/validators';
 import { authClear, setToken } from './userSlice';
+import { useAlert } from '../../utils/hooks';
+import { AccountNavProps } from '../../navigation/ParamList';
+import storeData from './storeData';
 
-interface LoginProps {}
+interface LoginProps {
+    navigation: AccountNavProps<'Auth'>['navigation'];
+}
 
-const Login: React.FC<LoginProps> = ({}) => {
+const Login: React.FC<LoginProps> = ({ navigation }) => {
     interface inputObj {
         value: string;
         error: string;
@@ -27,6 +32,7 @@ const Login: React.FC<LoginProps> = ({}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [login] = useMutation(api.LOGIN);
+    const setAlert = useAlert();
 
     const onLogin = async () => {
         const emailError = emailValidator(email.value);
@@ -45,14 +51,14 @@ const Login: React.FC<LoginProps> = ({}) => {
             });
             const token = res.data.tokenAuth.token;
             const _email = res.data.tokenAuth.payload.email;
+            await storeData({ email: _email, token });
             dispatch(setToken({ token, email: _email }));
+            navigation.navigate('Products');
         } catch (err) {
             dispatch(authClear());
-            // TODO: Flash invalid credentials
-            console.error(err);
+            setAlert({ text: 'Invalid Email/Password', type: 'danger' });
         } finally {
             setLoading(false);
-            // TODO: navigate to home screen
         }
     };
 
